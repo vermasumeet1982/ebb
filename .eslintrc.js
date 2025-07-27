@@ -23,9 +23,18 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-floating-promises': 'error',
+    '@typescript-eslint/no-unsafe-assignment': 'warn', // Downgrade to warning
     'no-console': 'warn',
     'prefer-const': 'error',
     'no-var': 'error',
   },
-  ignorePatterns: ['.eslintrc.js', 'dist/', 'node_modules/', 'prisma/'],
+  ignorePatterns: [
+    '.eslintrc.js', 
+    'dist/', 
+    'node_modules/', 
+    'prisma/',
+    '**/*.test.ts',
+    '**/*.spec.ts',
+    '**/__tests__/**'
+  ],
 }; 

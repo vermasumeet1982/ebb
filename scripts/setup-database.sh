@@ -125,6 +125,40 @@ else
     echo "DATABASE_URL=\"postgresql://${DB_USER}:[YOUR_PASSWORD]@localhost:5432/${DB_NAME}\""
 fi
 
+# Set up Prisma schema and generate client
+echo -e "${YELLOW}🔧 Setting up Prisma schema...${NC}"
+
+# Check if node_modules exists
+if [ ! -d "node_modules" ]; then
+    echo -e "${YELLOW}⚠️  node_modules not found. Please run 'yarn install' first.${NC}"
+    echo -e "${YELLOW}🚀 Next steps:${NC}"
+    echo "1. Run: yarn install"
+    echo "2. Run: npx prisma db push"
+    echo "3. Run: yarn prisma:generate"
+    echo "4. Run: yarn dev"
+    echo ""
+    echo -e "${GREEN}Happy coding! 🏦${NC}"
+    exit 0
+fi
+
+# Push Prisma schema to database
+echo -e "${YELLOW}📊 Pushing Prisma schema to database...${NC}"
+if npx prisma db push; then
+    echo -e "${GREEN}✅ Prisma schema pushed successfully${NC}"
+else
+    echo -e "${RED}❌ Error pushing Prisma schema${NC}"
+    exit 1
+fi
+
+# Generate Prisma client
+echo -e "${YELLOW}🔨 Generating Prisma client...${NC}"
+if yarn prisma:generate; then
+    echo -e "${GREEN}✅ Prisma client generated successfully${NC}"
+else
+    echo -e "${RED}❌ Error generating Prisma client${NC}"
+    exit 1
+fi
+
 echo ""
 echo -e "${GREEN}🎉 Setup Complete!${NC}"
 echo "=================================="
@@ -133,8 +167,6 @@ echo -e "User: ${GREEN}${DB_USER}${NC}"
 echo -e "Connection URL: ${GREEN}postgresql://${DB_USER}:[PASSWORD_HIDDEN]@localhost:5432/${DB_NAME}${NC}"
 echo ""
 echo -e "${YELLOW}🚀 Next steps:${NC}"
-echo "1. Run: yarn install"
-echo "2. Run: yarn prisma:migrate"
-echo "3. Run: yarn dev"
+echo "1. Run: yarn dev"
 echo ""
 echo -e "${GREEN}Happy coding! 🏦${NC}" 

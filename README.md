@@ -46,7 +46,7 @@ src/
    yarn install
    ```
 
-3. Set up the database:
+3. Set up the database and schema:
    ```bash
    # Using npm
    npm run db:setup
@@ -54,22 +54,15 @@ src/
    # Using yarn
    yarn db:setup
    ```
-   This will create the PostgreSQL database, user, and generate your `.env` file.
+   This will:
+   - Create the PostgreSQL database and user
+   - Generate your `.env` file
+   - Push the Prisma schema to create database tables
+   - Generate the Prisma client
    
    **Note:** If you get a permission error, make the script executable:
    ```bash
    chmod +x scripts/setup-database.sh
-   ```
-
-4. Run database migrations:
-   ```bash
-   # Using npm
-   npm run prisma:migrate
-   npm run prisma:generate
-   
-   # Using yarn
-   yarn prisma:migrate
-   yarn prisma:generate
    ```
 
 ### Development
@@ -90,7 +83,7 @@ The API will be available at `http://localhost:3000`
 - `npm run dev` / `yarn dev` - Start development server with hot reload
 - `npm run build` / `yarn build` - Build the project for production
 - `npm run start` / `yarn start` - Start production server
-- `npm run db:setup` / `yarn db:setup` - Set up PostgreSQL database and create .env file
+- `npm run db:setup` / `yarn db:setup` - Set up PostgreSQL database, schema, and create .env file
 - `npm run prisma:generate` / `yarn prisma:generate` - Generate Prisma client
 - `npm run prisma:migrate` / `yarn prisma:migrate` - Run database migrations
 - `npm run prisma:studio` / `yarn prisma:studio` - Open Prisma Studio

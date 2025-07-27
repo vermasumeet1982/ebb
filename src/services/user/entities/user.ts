@@ -1,3 +1,4 @@
+// Database entity types (separate from API schemas)
 export interface Address {
   line1: string;
   line2?: string;
