@@ -1,4 +1,4 @@
-import { AddressSchema, CreateUserSchema } from '../user.schema';
+import { AddressSchema, CreateUserSchema, UpdateUserSchema } from '../user.schema';
 
 describe('User Schema Validation', () => {
   describe('AddressSchema', () => {
@@ -284,6 +284,19 @@ describe('User Schema Validation', () => {
           })
         );
       });
+
+      it('should reject whitespace-only name', () => {
+        const invalidUser = { ...validUser, name: '   ' };
+
+        const result = CreateUserSchema.safeParse(invalidUser);
+        expect(result.success).toBe(false);
+        expect(result.error?.errors).toContainEqual(
+          expect.objectContaining({
+            path: ['name'],
+            message: 'Name cannot be empty or contain only whitespace',
+          })
+        );
+      });
     });
 
     describe('Email validation', () => {
@@ -565,6 +578,251 @@ describe('User Schema Validation', () => {
         expect(result.success).toBe(false);
         expect(result.error?.errors).toHaveLength(5); // name, email, phoneNumber, password, address
       });
+
+      it('should reject unknown fields', () => {
+        const testCases = [
+          {
+            userData: { ...validUser, unknownField: 'value' },
+            description: 'valid user + unknown field',
+          },
+          {
+            userData: { unknownField: 'value', anotherUnknown: 123 },
+            description: 'only unknown fields',
+          },
+          {
+            userData: { ...validUser, extraField: true, trackingId: 'abc123' },
+            description: 'multiple valid fields + unknown fields',
+          },
+        ];
+
+        testCases.forEach(({ userData, description }) => {
+          const result = CreateUserSchema.safeParse(userData);
+          expect(result.success).toBe(false);
+          expect(result.error?.errors).toContainEqual(
+            expect.objectContaining({
+              message: 'Unknown fields are not allowed',
+            })
+          );
+        });
+      });
     });
   });
-}); 
+
+  describe('UpdateUserSchema', () => {
+    const validAddress = {
+      line1: '123 Main Street',
+      town: 'London',
+      county: 'Greater London',
+      postcode: 'SW1A 1AA',
+    };
+
+    describe('Success cases', () => {
+      it('should validate empty update request', () => {
+        const result = UpdateUserSchema.safeParse({});
+        expect(result.success).toBe(true);
+        expect(result.data).toEqual({});
+      });
+
+      it('should validate update with only name', () => {
+        const updateData = { name: 'Jane Smith' };
+        const result = UpdateUserSchema.safeParse(updateData);
+        expect(result.success).toBe(true);
+        expect(result.data).toEqual(updateData);
+      });
+
+      it('should validate update with only email', () => {
+        const updateData = { email: 'jane.smith@example.com' };
+        const result = UpdateUserSchema.safeParse(updateData);
+        expect(result.success).toBe(true);
+        expect(result.data).toEqual(updateData);
+      });
+
+      it('should validate update with only phone number', () => {
+        const updateData = { phoneNumber: '+9876543210' };
+        const result = UpdateUserSchema.safeParse(updateData);
+        expect(result.success).toBe(true);
+        expect(result.data).toEqual(updateData);
+      });
+
+      it('should validate update with only address', () => {
+        const updateData = { address: validAddress };
+        const result = UpdateUserSchema.safeParse(updateData);
+        expect(result.success).toBe(true);
+        expect(result.data).toEqual(updateData);
+      });
+
+      it('should validate update with multiple fields', () => {
+        const updateData = {
+          name: 'Jane Smith',
+          email: 'jane.smith@example.com',
+          phoneNumber: '+9876543210',
+          address: validAddress,
+        };
+        const result = UpdateUserSchema.safeParse(updateData);
+        expect(result.success).toBe(true);
+        expect(result.data).toEqual(updateData);
+      });
+
+      it('should validate name with maximum length', () => {
+        const longName = 'A'.repeat(100);
+        const updateData = { name: longName };
+        const result = UpdateUserSchema.safeParse(updateData);
+        expect(result.success).toBe(true);
+        expect(result.data?.name).toBe(longName);
+      });
+    });
+
+    describe('Validation errors', () => {
+      it('should reject name exceeding maximum length', () => {
+        const updateData = { name: 'A'.repeat(101) };
+        const result = UpdateUserSchema.safeParse(updateData);
+        expect(result.success).toBe(false);
+        expect(result.error?.errors).toContainEqual(
+          expect.objectContaining({
+            path: ['name'],
+            message: 'Name must be at most 100 characters',
+          })
+        );
+      });
+
+      it('should reject empty name', () => {
+        const updateData = { name: '' };
+        const result = UpdateUserSchema.safeParse(updateData);
+        expect(result.success).toBe(false);
+        expect(result.error?.errors).toContainEqual(
+          expect.objectContaining({
+            path: ['name'],
+            message: 'Name is required',
+          })
+        );
+      });
+
+      it('should reject invalid email format', () => {
+        const testCases = [
+          'invalid-email',
+          'test@',
+          '@example.com',
+          'test..test@example.com',
+          'test@example',
+          'test@.com',
+        ];
+
+        testCases.forEach(email => {
+          const updateData = { email };
+          const result = UpdateUserSchema.safeParse(updateData);
+          expect(result.success).toBe(false);
+          expect(result.error?.errors).toContainEqual(
+            expect.objectContaining({
+              path: ['email'],
+              message: 'Invalid email format',
+            })
+          );
+        });
+      });
+
+      it('should reject invalid phone number format', () => {
+        const testCases = [
+          '1234567890', // Missing +
+          '+01234567890', // Starts with 0
+          '+1234567890123456', // Too long (16 digits)
+          '+123456789a', // Contains letters
+          '+123 456 7890', // Contains spaces
+          '+123-456-7890', // Contains hyphens
+        ];
+
+        testCases.forEach(phoneNumber => {
+          const updateData = { phoneNumber };
+          const result = UpdateUserSchema.safeParse(updateData);
+          expect(result.success).toBe(false);
+          expect(result.error?.errors).toContainEqual(
+            expect.objectContaining({
+              path: ['phoneNumber'],
+              message: 'Phone number must be in international format (+1234567890)',
+            })
+          );
+        });
+      });
+
+      it('should reject invalid address structure', () => {
+        const updateData = { address: 'invalid' };
+        const result = UpdateUserSchema.safeParse(updateData);
+        expect(result.success).toBe(false);
+      });
+
+      it('should reject address with missing required fields', () => {
+        const invalidAddress = {
+          line1: '123 Main Street',
+          // Missing town, county, postcode
+        };
+        const updateData = { address: invalidAddress };
+        const result = UpdateUserSchema.safeParse(updateData);
+        expect(result.success).toBe(false);
+        expect(result.error?.errors).toHaveLength(3);
+      });
+    });
+
+    describe('Edge cases', () => {
+      it('should handle null values', () => {
+        const updateData = {
+          name: null,
+          email: null,
+          phoneNumber: null,
+          address: null,
+        };
+        const result = UpdateUserSchema.safeParse(updateData);
+        expect(result.success).toBe(false);
+      });
+
+      it('should handle undefined values', () => {
+        const updateData = {
+          name: undefined,
+          email: undefined,
+          phoneNumber: undefined,
+          address: undefined,
+        };
+        const result = UpdateUserSchema.safeParse(updateData);
+        expect(result.success).toBe(true); // Optional fields accept undefined values
+        expect(result.data).toEqual({}); // Undefined values are stripped out
+      });
+
+      it('should reject unknown fields', () => {
+        const testCases = [
+          {
+            updateData: { name: 'John Doe', unknownField: 'value' },
+            description: 'valid field + unknown field',
+          },
+          {
+            updateData: { unknownField: 'value', anotherUnknown: 123 },
+            description: 'only unknown fields',
+          },
+          {
+            updateData: { name: 'John Doe', email: 'test@example.com', extraField: true },
+            description: 'multiple valid fields + unknown field',
+          },
+        ];
+
+        testCases.forEach(({ updateData, description }) => {
+          const result = UpdateUserSchema.safeParse(updateData);
+          expect(result.success).toBe(false);
+          expect(result.error?.errors).toContainEqual(
+            expect.objectContaining({
+              message: 'Unknown fields are not allowed',
+            })
+          );
+        });
+      });
+
+      it('should handle whitespace-only name', () => {
+        const updateData = { name: '   ' };
+        const result = UpdateUserSchema.safeParse(updateData);
+        expect(result.success).toBe(false); // Reject whitespace-only names
+        expect(result.error?.errors).toContainEqual(
+          expect.objectContaining({
+            path: ['name'],
+            message: 'Name cannot be empty or contain only whitespace',
+          })
+        );
+      });
+    });
+  });
+});

@@ -14,7 +14,8 @@ export const AddressSchema = z.object({
 export const CreateUserSchema = z.object({
   name: z.string()
     .min(1, 'Name is required')
-    .max(100, 'Name must be at most 100 characters'),
+    .max(100, 'Name must be at most 100 characters')
+    .regex(/^(?!\s*$).+/, 'Name cannot be empty or contain only whitespace'),
   
   email: z.string()
     .email('Invalid email format'),
@@ -31,8 +32,28 @@ export const CreateUserSchema = z.object({
     ),
   
   address: AddressSchema,
-});
+}).strict('Unknown fields are not allowed');
+
+// Update User Request schema (all fields optional)
+export const UpdateUserSchema = z.object({
+  name: z.string()
+    .min(1, 'Name is required')
+    .max(100, 'Name must be at most 100 characters')
+    .regex(/^(?!\s*$).+/, 'Name cannot be empty or contain only whitespace')
+    .optional(),
+  
+  email: z.string()
+    .email('Invalid email format')
+    .optional(),
+  
+  phoneNumber: z.string()
+    .regex(/^\+[1-9]\d{1,14}$/, 'Phone number must be in international format (+1234567890)')
+    .optional(),
+  
+  address: AddressSchema.optional(),
+}).strict('Unknown fields are not allowed');
 
 // Type exports
 export type CreateUserRequest = z.infer<typeof CreateUserSchema>;
+export type UpdateUserRequest = z.infer<typeof UpdateUserSchema>;
 export type Address = z.infer<typeof AddressSchema>; 

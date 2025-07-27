@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { createUser } from '../commands/create-user';
 import { getUser } from '../querier/get-user';
-import { CreateUserRequest } from '../schema/user.schema';
+import { updateUser } from '../commands/update-user';
+import { CreateUserRequest, UpdateUserRequest } from '../schema/user.schema';
 import { mapUserToResponse, mapPrismaUserToUser } from '../mapper/user.mapper';
 
 // Prisma client instance (will be injected)
@@ -68,6 +69,48 @@ export async function getUserHandler(
     
     // Get user via service layer
     const dbUserEntity = await getUser(prismaClient, userId);
+    
+    // Convert Prisma User to our User interface using mapper
+    const user = mapPrismaUserToUser(dbUserEntity);
+    
+    // Map internal entity to API response
+    const response = mapUserToResponse(user);
+    
+    // Return success response
+    res.status(200).json(response);
+  } catch (error) {
+    // Pass error to error handling middleware
+    next(error);
+  }
+}
+
+/**
+ * Handle PATCH /v1/users/{userId} - Update user by ID
+ */
+export async function updateUserHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    // Get userId from path parameters
+    const { userId } = req.params;
+    
+    // Ensure userId is provided
+    if (!userId) {
+      res.status(400).json({
+        error: 'Bad Request',
+        message: 'User ID is required',
+        statusCode: 400,
+      });
+      return;
+    }
+    
+    // Request body is already validated by middleware
+    const updateData = req.body as UpdateUserRequest;
+    
+    // Update user via service layer
+    const dbUserEntity = await updateUser(prismaClient, userId, updateData);
     
     // Convert Prisma User to our User interface using mapper
     const user = mapPrismaUserToUser(dbUserEntity);
