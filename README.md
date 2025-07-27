@@ -24,10 +24,14 @@ src/
 
 ## Getting Started
 
+### 📖 Documentation
+
+- **[Database Setup Guide](./DATABASE_SETUP.md)** - Complete PostgreSQL setup instructions
+
 ### Prerequisites
 
 - Node.js (v18 or higher)
-- PostgreSQL
+- PostgreSQL (see [Database Setup Guide](./DATABASE_SETUP.md) for installation)
 - npm or yarn
 
 ### Installation
@@ -35,40 +39,63 @@ src/
 1. Clone the repository
 2. Install dependencies:
    ```bash
+   # Using npm
    npm install
+   
+   # Using yarn
+   yarn install
    ```
 
-3. Set up environment variables:
+3. Set up the database:
    ```bash
-   cp .env.example .env
+   # Using npm
+   npm run db:setup
+   
+   # Using yarn
+   yarn db:setup
    ```
-   Update the `.env` file with your database credentials and other configuration.
-
-4. Set up the database:
+   This will create the PostgreSQL database, user, and generate your `.env` file.
+   
+   **Note:** If you get a permission error, make the script executable:
    ```bash
+   chmod +x scripts/setup-database.sh
+   ```
+
+4. Run database migrations:
+   ```bash
+   # Using npm
    npm run prisma:migrate
    npm run prisma:generate
+   
+   # Using yarn
+   yarn prisma:migrate
+   yarn prisma:generate
    ```
 
 ### Development
 
 Start the development server:
 ```bash
+# Using npm
 npm run dev
+
+# Using yarn
+yarn dev
 ```
 
 The API will be available at `http://localhost:3000`
 
 ### Available Scripts
 
-- `npm run dev` - Start development server with hot reload
-- `npm run build` - Build the project for production
-- `npm run start` - Start production server
-- `npm run prisma:generate` - Generate Prisma client
-- `npm run prisma:migrate` - Run database migrations
-- `npm run prisma:studio` - Open Prisma Studio
-- `npm run test` - Run tests
-- `npm run lint` - Run ESLint
+- `npm run dev` / `yarn dev` - Start development server with hot reload
+- `npm run build` / `yarn build` - Build the project for production
+- `npm run start` / `yarn start` - Start production server
+- `npm run db:setup` / `yarn db:setup` - Set up PostgreSQL database and create .env file
+- `npm run prisma:generate` / `yarn prisma:generate` - Generate Prisma client
+- `npm run prisma:migrate` / `yarn prisma:migrate` - Run database migrations
+- `npm run prisma:studio` / `yarn prisma:studio` - Open Prisma Studio
+- `npm run test` / `yarn test` - Run tests
+- `npm run lint` / `yarn lint` - Run ESLint
 
 ## API Endpoints
 
@@ -109,6 +136,8 @@ See `.env.example` for required environment variables.
 The application uses a single PostgreSQL database with separate tables for different services:
 - Users (User service)
 - Accounts and Transactions (Account service)
+
+For detailed database setup and schema information, see [DATABASE_SETUP.md](./DATABASE_SETUP.md).
 
 ## Contributing
 
