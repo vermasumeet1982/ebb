@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { ConflictError, UnauthorizedError } from '../utils/errors.util';
+import { ConflictError, UnauthorizedError, ValidationError, NotFoundError } from '../utils/errors.util';
 
 /**
  * Global error handling middleware
@@ -27,6 +27,22 @@ export function errorHandler(
     res.status(400).json({
       message: 'Validation failed',
       details: validationErrors,
+    });
+    return;
+  }
+
+  // Handle custom validation errors
+  if (error instanceof ValidationError) {
+    res.status(400).json({
+      message: error.message,
+    });
+    return;
+  }
+
+  // Handle not found errors
+  if (error instanceof NotFoundError) {
+    res.status(404).json({
+      message: error.message,
     });
     return;
   }

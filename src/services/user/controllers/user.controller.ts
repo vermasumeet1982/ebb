@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { createUser } from '../commands/create-user';
+import { getUser } from '../querier/get-user';
 import { CreateUserRequest } from '../schema/user.schema';
 import { mapUserToResponse, mapPrismaUserToUser } from '../mapper/user.mapper';
 
@@ -37,6 +38,45 @@ export async function createUserHandler(
     
     // Return success response
     res.status(201).json(response);
+  } catch (error) {
+    // Pass error to error handling middleware
+    next(error);
+  }
+}
+
+/**
+ * Handle GET /v1/users/{userId} - Get user by ID
+ */
+export async function getUserHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    // Get userId from path parameters
+    const { userId } = req.params;
+    
+    // Ensure userId is provided (Express should handle this, but TypeScript needs it)
+    if (!userId) {
+      res.status(400).json({
+        error: 'Bad Request',
+        message: 'User ID is required',
+        statusCode: 400,
+      });
+      return;
+    }
+    
+    // Get user via service layer
+    const dbUserEntity = await getUser(prismaClient, userId);
+    
+    // Convert Prisma User to our User interface using mapper
+    const user = mapPrismaUserToUser(dbUserEntity);
+    
+    // Map internal entity to API response
+    const response = mapUserToResponse(user);
+    
+    // Return success response
+    res.status(200).json(response);
   } catch (error) {
     // Pass error to error handling middleware
     next(error);

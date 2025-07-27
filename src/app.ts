@@ -84,6 +84,7 @@ export async function startServer(): Promise<void> {
       console.log(`🏦 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`👤 Available endpoints:`);
       console.log(`   POST /v1/users (Create user)`);
+      console.log(`   GET  /v1/users/{userId} (Get user by ID) - Requires authentication`);
       console.log(`   POST /v1/auth/login (Authenticate user)`);
     });
 
