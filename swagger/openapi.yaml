@@ -445,6 +445,10 @@ paths:
                 $ref: '#/components/schemas/UserResponse'
         '400':
           description: Invalid details supplied
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
         '500':
           description: An unexpected error occurred
           content:
@@ -783,6 +787,7 @@ components:
         - address
         - phoneNumber
         - email
+        - password
       properties:
         name:
           type: string
@@ -813,7 +818,21 @@ components:
           format: ^\+[1-9]\d{1,14}$
         email:
           type: string
-          format: email    
+          format: email
+        password:
+          type: string
+          minLength: 8
+          maxLength: 64
+          pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,64}$"
+          description: |
+            Password requirements:
+            - 8-64 characters long
+            - At least one lowercase letter (a-z)
+            - At least one uppercase letter (A-Z)
+            - At least one digit (0-9)
+            - At least one special character (@$!%*?&)
+            - No spaces allowed
+          example: "MySecure@Pass1"
     UpdateUserRequest:
       type: object
       properties:
