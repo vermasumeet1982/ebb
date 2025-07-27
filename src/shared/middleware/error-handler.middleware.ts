@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { ConflictError } from '../utils/errors.util';
+import { ConflictError, UnauthorizedError } from '../utils/errors.util';
 
 /**
  * Global error handling middleware
@@ -55,6 +55,14 @@ export function errorHandler(
     return;
   }
 
+   // Handle unauthorized errors
+   if (error instanceof UnauthorizedError) {
+    res.status(401).json({
+      message: error.message,
+    });
+    return;
+  }
+  
   // Handle JWT errors
   if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
     res.status(401).json({

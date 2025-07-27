@@ -92,22 +92,24 @@ The API will be available at `http://localhost:3000`
 
 ## API Endpoints
 
+### Authentication
+- `POST /v1/auth/login` - Authenticate user and get JWT token
+
 ### User Service
 - `POST /v1/users` - Create user
-- `POST /v1/auth/login` - Authenticate user
-- `GET /v1/users/{userId}` - Get user details
-- `PATCH /v1/users/{userId}` - Update user
-- `DELETE /v1/users/{userId}` - Delete user
+- `GET /v1/users/{userId}` - Get user details (requires authentication)
+- `PATCH /v1/users/{userId}` - Update user (requires authentication)
+- `DELETE /v1/users/{userId}` - Delete user (requires authentication)
 
 ### Account Service
-- `POST /v1/accounts` - Create bank account
-- `GET /v1/accounts` - List user's accounts
-- `GET /v1/accounts/{accountId}` - Get account details
-- `PATCH /v1/accounts/{accountId}` - Update account
-- `DELETE /v1/accounts/{accountId}` - Delete account
-- `POST /v1/accounts/{accountId}/transactions` - Create transaction
-- `GET /v1/accounts/{accountId}/transactions` - List transactions
-- `GET /v1/accounts/{accountId}/transactions/{transactionId}` - Get transaction
+- `POST /v1/accounts` - Create bank account (requires authentication)
+- `GET /v1/accounts` - List user's accounts (requires authentication)
+- `GET /v1/accounts/{accountId}` - Get account details (requires authentication)
+- `PATCH /v1/accounts/{accountId}` - Update account (requires authentication)
+- `DELETE /v1/accounts/{accountId}` - Delete account (requires authentication)
+- `POST /v1/accounts/{accountId}/transactions` - Create transaction (requires authentication)
+- `GET /v1/accounts/{accountId}/transactions` - List transactions (requires authentication)
+- `GET /v1/accounts/{accountId}/transactions/{transactionId}` - Get transaction (requires authentication)
 
 ## Features
 
@@ -122,7 +124,18 @@ The API will be available at `http://localhost:3000`
 
 ## Environment Variables
 
-See `.env.example` for required environment variables.
+The following environment variables are required:
+
+- `ENVIRONMENT` - Application environment (development/production)
+- `PORT` - Server port (default: 3000)
+- `DATABASE_URL` - PostgreSQL connection string
+- `CORS_ORIGIN` - CORS origin (default: *)
+- `JWT_SECRET` - Secret key for JWT token signing (required for authentication)
+
+**Important:** Set a strong, unique JWT_SECRET in production. You can generate one using:
+```bash
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+```
 
 ## Database Schema
 

@@ -5,9 +5,11 @@ import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 
 import { userRoutes } from './services/user/routes/user.routes';
+import { authRoutes } from './services/user/routes/auth.routes';
 import { errorHandler, notFoundHandler } from './shared/middleware/error-handler.middleware';
 import { connectDatabase, prisma } from './shared/database/client';
 import { initUserController } from './services/user/controllers/user.controller';
+import { initAuthController } from './services/user/controllers/auth.controller';
 
 // Load environment variables
 dotenv.config();
@@ -50,9 +52,11 @@ export function createApp(): Express {
 
   // Initialize controllers with dependencies
   initUserController(prisma);
+  initAuthController(prisma);
 
-  // API routes - only user creation
+  // API routes
   app.use('/', userRoutes);
+  app.use('/', authRoutes);
 
   // Error handling middleware (must be last)
   app.use(notFoundHandler);
@@ -78,7 +82,9 @@ export async function startServer(): Promise<void> {
       console.log(`🚀 Eagle Bank API server running on port ${PORT}`);
       console.log(`📖 Health check: http://localhost:${PORT}/health`);
       console.log(`🏦 Environment: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`👤 Available endpoint: POST /v1/users`);
+      console.log(`👤 Available endpoints:`);
+      console.log(`   POST /v1/users (Create user)`);
+      console.log(`   POST /v1/auth/login (Authenticate user)`);
     });
 
     // Graceful shutdown handling
@@ -89,7 +95,7 @@ export async function startServer(): Promise<void> {
         server.close(() => {
           console.log('✅ HTTP server closed');
           
-          void (async (): Promise<void> => {
+          void (async (): Promise<void> => { // Added explicit return type
             try {
               await prisma.$disconnect();
               console.log('✅ Database connection closed');
