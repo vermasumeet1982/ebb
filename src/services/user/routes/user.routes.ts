@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { createUserHandler, getUserHandler, updateUserHandler } from '../controllers/user.controller';
 import { validateRequest } from '@/shared/middleware/validation.middleware';
 import { authenticateToken } from '@/shared/middleware/auth.middleware';
+import { authorizeUserAccess } from '@/shared/middleware/authorization.middleware';
 import { CreateUserSchema, UpdateUserSchema } from '../schema/user.schema';
 
 // Create router instance
@@ -20,6 +21,7 @@ router.post(
 router.get(
   '/v1/users/:userId',
   authenticateToken,
+  authorizeUserAccess,
   (req, res, next) => {
     void getUserHandler(req, res, next);
   }
@@ -29,6 +31,7 @@ router.get(
 router.patch(
   '/v1/users/:userId',
   authenticateToken,
+  authorizeUserAccess,
   validateRequest(UpdateUserSchema),
   (req, res, next) => {
     void updateUserHandler(req, res, next);

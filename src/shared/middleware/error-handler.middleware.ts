@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { ConflictError, UnauthorizedError, ValidationError, NotFoundError } from '../utils/errors.util';
+import { ConflictError, UnauthorizedError, ValidationError, NotFoundError, ForbiddenError } from '../utils/errors.util';
 
 /**
  * Global error handling middleware
@@ -74,6 +74,14 @@ export function errorHandler(
    // Handle unauthorized errors
    if (error instanceof UnauthorizedError) {
     res.status(401).json({
+      message: error.message,
+    });
+    return;
+  }
+
+  // Handle forbidden errors (authorization failures)
+  if (error instanceof ForbiddenError) {
+    res.status(403).json({
       message: error.message,
     });
     return;
