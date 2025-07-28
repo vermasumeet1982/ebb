@@ -1,9 +1,6 @@
-import {
-  BankAccount,
-  BankAccountResponse,
-  Transaction,
-  TransactionResponse,
-} from '../entities';
+import { BankAccount } from '../entities/account';
+import { BankAccountResponse, TransactionResponse } from '../entities/account.dto';
+import { Transaction } from '../entities/transaction';
 
 /**
  * Maps internal BankAccount entity to API BankAccountResponse DTO
@@ -14,7 +11,7 @@ export function mapAccountToResponse(account: BankAccount): BankAccountResponse 
     sortCode: account.sortCode,
     name: account.name,
     accountType: account.accountType,
-    balance: account.balance,
+    balance: Number(account.balance.toFixed(2)), // Convert Decimal to number with 2 decimal places
     currency: account.currency,
     createdTimestamp: account.createdTimestamp.toISOString(),
     updatedTimestamp: account.updatedTimestamp.toISOString(),
@@ -27,7 +24,7 @@ export function mapAccountToResponse(account: BankAccount): BankAccountResponse 
 export function mapTransactionToResponse(transaction: Transaction): TransactionResponse {
   return {
     id: transaction.transactionId, // Map internal transactionId to API id
-    amount: transaction.amount,
+    amount: Number(transaction.amount.toFixed(2)), // Convert Decimal to number with 2 decimal places
     currency: transaction.currency,
     type: transaction.type,
     ...(transaction.reference && { reference: transaction.reference }), // Only include if exists

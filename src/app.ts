@@ -6,13 +6,19 @@ import rateLimit from 'express-rate-limit';
 
 import { userRoutes } from './services/user/routes/user.routes';
 import { authRoutes } from './services/user/routes/auth.routes';
+import { accountRoutes } from './services/account/routes/account.routes';
 import { errorHandler, notFoundHandler } from './shared/middleware/error-handler.middleware';
 import { connectDatabase, prisma } from './shared/database/client';
 import { initUserController } from './services/user/controllers/user.controller';
 import { initAuthController } from './services/user/controllers/auth.controller';
+import { initAccountController } from './services/account/controllers/account.controller';
+import { configureDecimal } from './shared/config/decimal.config';
 
 // Load environment variables
 dotenv.config();
+
+// Configure Decimal.js for financial calculations
+configureDecimal();
 
 /**
  * Create and configure Express application
@@ -53,10 +59,12 @@ export function createApp(): Express {
   // Initialize controllers with dependencies
   initUserController(prisma);
   initAuthController(prisma);
+  initAccountController(prisma);
 
   // API routes
   app.use('/', userRoutes);
   app.use('/', authRoutes);
+  app.use('/', accountRoutes);
 
   // Error handling middleware (must be last)
   app.use(notFoundHandler);
@@ -87,6 +95,7 @@ export async function startServer(): Promise<void> {
       console.log(`   GET  /v1/users/{userId} (Get user by ID) - Requires authentication & authorization (own data only)`);
       console.log(`   PATCH /v1/users/{userId} (Update user by ID) - Requires authentication & authorization (own data only) - Only updates when data changes`);
       console.log(`   POST /v1/auth/login (Authenticate user)`);
+      console.log(`   POST /v1/accounts (Create bank account) - Requires authentication`);
     });
 
     // Graceful shutdown handling

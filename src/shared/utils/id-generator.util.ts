@@ -18,10 +18,15 @@ export function generateTransactionId(): string {
 
 /**
  * Generates an account number with pattern: 01xxxxxx (8 digits starting with 01)
+ * Returns a number between 01000000 and 01999999
  */
 export function generateAccountNumber(): string {
-  const suffix = Math.floor(100000 + Math.random() * 900000); // 6 digit number
-  return `01${suffix}`;
+  // Generate a random number between 0 and 999999
+  const randomNum = Math.floor(Math.random() * 1000000);
+  // Convert to string and pad with leading zeros to ensure 6 digits
+  const sixDigits = randomNum.toString().padStart(6, '0');
+  // Prefix with '01' to match the required pattern
+  return `01${sixDigits}`;
 }
 
 /**

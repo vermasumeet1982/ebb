@@ -1,3 +1,4 @@
+import { Decimal } from 'decimal.js';
 import { Currency } from './account';
 
 export enum TransactionType {
@@ -8,7 +9,7 @@ export enum TransactionType {
 export interface Transaction {
   id: string; // Internal database ID
   transactionId: string; // Pattern: ^tan-[A-Za-z0-9]+$ - Customer-facing transaction ID
-  amount: number; // 0.00 to 10000.00
+  amount: Decimal; // Using Decimal for precise financial calculations
   currency: Currency;
   type: TransactionType;
   reference?: string;

@@ -1,3 +1,5 @@
+import { Decimal } from 'decimal.js';
+
 export enum AccountType {
   PERSONAL = 'personal',
 }
@@ -14,7 +16,7 @@ export interface BankAccount {
   sortCode: string; // Always "10-10-10"
   name: string;
   accountType: AccountType;
-  balance: number; // 0.00 to 10000.00
+  balance: Decimal; // Using Decimal for precise financial calculations
   currency: Currency;
   userId: string; // Foreign key to User (usr-[A-Za-z0-9]+)
   createdTimestamp: Date;
