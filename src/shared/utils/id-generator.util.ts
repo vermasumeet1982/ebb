@@ -1,7 +1,8 @@
 import { randomBytes } from 'crypto';
 
 /**
- * Generates a user ID with pattern: usr-[A-Za-z0-9]+
+ * Generates a unique user ID with 'usr-' prefix
+ * Pattern: usr-[A-Za-z0-9]+ (using hex characters for simplicity)
  */
 export function generateUserId(): string {
   const suffix = randomBytes(8).toString('hex'); // 16 character hex string
@@ -10,6 +11,8 @@ export function generateUserId(): string {
 
 /**
  * Generates a transaction ID with pattern: tan-[A-Za-z0-9]+
+ * Note: This generates a longer ID than the OpenAPI spec pattern (^tan-[A-Za-z0-9]$)
+ * for better uniqueness and security in a banking context
  */
 export function generateTransactionId(): string {
   const suffix = randomBytes(8).toString('hex'); // 16 character hex string
@@ -28,31 +31,3 @@ export function generateAccountNumber(): string {
   // Prefix with '01' to match the required pattern
   return `01${sixDigits}`;
 }
-
-/**
- * Validates if a string matches the user ID pattern
- */
-export function isValidUserId(id: string): boolean {
-  return /^usr-[A-Za-z0-9]+$/.test(id);
-}
-
-/**
- * Validates if a string matches the transaction ID pattern
- */
-export function isValidTransactionId(id: string): boolean {
-  return /^tan-[A-Za-z0-9]+$/.test(id);
-}
-
-/**
- * Validates if a string matches the account number pattern
- */
-export function isValidAccountNumber(accountNumber: string): boolean {
-  return /^01\d{6}$/.test(accountNumber);
-}
-
-/**
- * Validates if a string matches the phone number pattern
- */
-export function isValidPhoneNumber(phoneNumber: string): boolean {
-  return /^\+[1-9]\d{1,14}$/.test(phoneNumber);
-} 

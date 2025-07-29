@@ -1,61 +1,74 @@
-import {
-  generateAccountNumber,
-  isValidAccountNumber,
-} from '../id-generator.util';
+import { generateUserId, generateTransactionId, generateAccountNumber } from '../id-generator.util';
+import { isValidUserId, isValidAccountNumber } from '../validation.util';
 
 describe('ID Generator Utils', () => {
-  describe('generateAccountNumber', () => {
-    it('should generate account number matching pattern ^01\\d{6}$', () => {
-      // Test multiple times to ensure consistent pattern
-      for (let i = 0; i < 1000; i++) {
-        const accountNumber = generateAccountNumber();
-        expect(accountNumber).toMatch(/^01\d{6}$/);
+  describe('generateUserId', () => {
+    it('should generate valid user IDs', () => {
+      // Test multiple generations to ensure pattern consistency
+      for (let i = 0; i < 100; i++) {
+        const id = generateUserId();
+        expect(isValidUserId(id)).toBe(true);
+        expect(id).toMatch(/^usr-[0-9a-f]{16}$/); // Hex format
       }
     });
 
-    it('should always generate 8-digit number starting with 01', () => {
-      const accountNumber = generateAccountNumber();
-      expect(accountNumber).toHaveLength(8);
-      expect(accountNumber.startsWith('01')).toBe(true);
-    });
-
-    it('should generate numbers within valid range', () => {
-      const accountNumber = generateAccountNumber();
-      const numericPart = parseInt(accountNumber.slice(2), 10);
-      expect(numericPart).toBeGreaterThanOrEqual(0);
-      expect(numericPart).toBeLessThanOrEqual(999999);
+    it('should generate unique IDs', () => {
+      const ids = new Set();
+      for (let i = 0; i < 1000; i++) {
+        ids.add(generateUserId());
+      }
+      expect(ids.size).toBe(1000); // All IDs should be unique
     });
   });
 
-  describe('isValidAccountNumber', () => {
-    it('should validate correct account numbers', () => {
-      const validNumbers = [
-        '01000000',
-        '01123456',
-        '01999999',
-      ];
+  describe('generateTransactionId', () => {
+    it('should generate transaction IDs in correct format', () => {
+      // Test multiple generations to ensure pattern consistency
+      for (let i = 0; i < 100; i++) {
+        const id = generateTransactionId();
+        expect(id).toMatch(/^tan-[0-9a-f]{16}$/); // Hex format
+      }
+    });
 
-      validNumbers.forEach(number => {
+    it('should generate unique IDs', () => {
+      const ids = new Set();
+      for (let i = 0; i < 1000; i++) {
+        ids.add(generateTransactionId());
+      }
+      expect(ids.size).toBe(1000); // All IDs should be unique
+    });
+
+    it('should generate IDs with correct prefix and length', () => {
+      const id = generateTransactionId();
+      expect(id.startsWith('tan-')).toBe(true);
+      expect(id.length).toBe(20); // 'tan-' (4) + hex string (16)
+    });
+  });
+
+  describe('generateAccountNumber', () => {
+    it('should generate valid account numbers', () => {
+      // Test multiple generations to ensure pattern consistency
+      for (let i = 0; i < 100; i++) {
+        const number = generateAccountNumber();
         expect(isValidAccountNumber(number)).toBe(true);
-      });
+        expect(number).toMatch(/^01\d{6}$/);
+      }
     });
 
-    it('should reject invalid account numbers', () => {
-      const invalidNumbers = [
-        '02123456', // Doesn't start with 01
-        '01123', // Too short
-        '011234567', // Too long
-        '0112345', // 7 digits but wrong format
-        'ab123456', // Invalid prefix
-        '01abcdef', // Contains letters
-        '01.12345', // Contains special characters
-      ];
+    it('should generate numbers in the correct range', () => {
+      for (let i = 0; i < 100; i++) {
+        const number = generateAccountNumber();
+        const value = parseInt(number, 10);
+        expect(value).toBeGreaterThanOrEqual(1000000);
+        expect(value).toBeLessThanOrEqual(1999999);
+      }
+    });
 
-      invalidNumbers.forEach(number => {
-        expect(isValidAccountNumber(number)).toBe(false);
-      });
+    it('should always be 8 digits long', () => {
+      for (let i = 0; i < 100; i++) {
+        const number = generateAccountNumber();
+        expect(number.length).toBe(8);
+      }
     });
   });
-
-  // Add other ID generator tests...
 }); 

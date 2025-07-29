@@ -2,8 +2,10 @@ import { Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { createBankAccount } from '../commands/create-bank-account';
 import { listAccounts } from '../querier/list-accounts';
+import { getAccount } from '../querier/get-account';
 import { mapAccountToResponse } from '../mapper/account.mapper';
-import { UnauthorizedError, NotFoundError } from '@/shared/utils/errors.util';
+import { UnauthorizedError, NotFoundError, ValidationError } from '@/shared/utils/errors.util';
+import { isValidAccountNumber } from '@/shared/utils/validation.util';
 
 let prismaClient: PrismaClient;
 
@@ -12,6 +14,58 @@ let prismaClient: PrismaClient;
  */
 export function initAccountController(prisma: PrismaClient): void {
   prismaClient = prisma;
+}
+
+/**
+ * Handle GET /v1/accounts/{accountNumber} - Get bank account by number
+ */
+export async function getAccountHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    // Defensive check for authentication
+    if (!req.user?.userId) {
+      // TODO: Replace console.error with proper logging library (e.g., Winston/Pino)
+      // for better error tracking and log management in production
+      console.error('Authentication failed:', {
+        path: `/v1/accounts/${req.params.accountNumber}`,
+        method: 'GET',
+        user: req.user || 'undefined',
+        timestamp: new Date().toISOString(),
+      });
+      throw new UnauthorizedError('Authentication required');
+    }
+
+    const { accountNumber } = req.params;
+
+    // Validate account number format
+    if (!accountNumber || !isValidAccountNumber(accountNumber)) {
+      throw new ValidationError('Invalid account number format');
+    }
+
+    // Look up user's internal ID
+    const user = await prismaClient.user.findUnique({
+      where: { userId: req.user.userId },
+      select: { id: true },
+    });
+
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+
+    // Get account details
+    const dbBankAccount = await getAccount(prismaClient, accountNumber, user.id);
+
+    // Map to response DTO
+    const response = mapAccountToResponse(dbBankAccount);
+
+    // Return 200 OK
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
 }
 
 /**

@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { createBankAccountHandler, listAccountsHandler } from '../controllers/account.controller';
+import {
+  createBankAccountHandler,
+  listAccountsHandler,
+  getAccountHandler,
+} from '../controllers/account.controller';
 import { validateRequest } from '@/shared/middleware/validation.middleware';
 import { authenticateToken } from '@/shared/middleware/auth.middleware';
 import { CreateBankAccountSchema } from '../schema/account.schema';
@@ -13,6 +17,15 @@ router.get(
   authenticateToken,
   (req, res, next) => {
     void listAccountsHandler(req, res, next);
+  }
+);
+
+// Get account by number route
+router.get(
+  '/v1/accounts/:accountNumber',
+  authenticateToken,
+  (req, res, next) => {
+    void getAccountHandler(req, res, next);
   }
 );
 
