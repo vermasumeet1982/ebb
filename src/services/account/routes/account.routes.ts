@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createBankAccountHandler } from '../controllers/account.controller';
+import { createBankAccountHandler, listAccountsHandler } from '../controllers/account.controller';
 import { validateRequest } from '@/shared/middleware/validation.middleware';
 import { authenticateToken } from '@/shared/middleware/auth.middleware';
 import { CreateBankAccountSchema } from '../schema/account.schema';
@@ -7,7 +7,16 @@ import { CreateBankAccountSchema } from '../schema/account.schema';
 // Create router instance
 const router = Router();
 
-// Create bank account route
+// List accounts route
+router.get(
+  '/v1/accounts',
+  authenticateToken,
+  (req, res, next) => {
+    void listAccountsHandler(req, res, next);
+  }
+);
+
+// Create account route
 router.post(
   '/v1/accounts',
   authenticateToken,
@@ -17,4 +26,4 @@ router.post(
   }
 );
 
-export { router as accountRoutes }; 
+export const accountRoutes = router; 
