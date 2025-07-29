@@ -14,4 +14,16 @@ export const CreateBankAccountSchema = z.object({
 }).strict('Unknown fields are not allowed');
 
 // Type exports
-export type CreateBankAccountRequest = z.infer<typeof CreateBankAccountSchema>; 
+export type CreateBankAccountRequest = z.infer<typeof CreateBankAccountSchema>;
+
+// Update Bank Account Request schema (matches OpenAPI spec)
+export const UpdateBankAccountSchema = z.object({
+  name: z.string()
+    .min(1, 'Name is required')
+    .regex(/^(?!\s*$).+/, 'Name cannot be empty or contain only whitespace')
+    .optional(),
+  accountType: z.nativeEnum(AccountType)
+    .optional(),
+}).strict('Unknown fields are not allowed');
+
+export type UpdateBankAccountRequest = z.infer<typeof UpdateBankAccountSchema>; 

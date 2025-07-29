@@ -98,6 +98,7 @@ export async function startServer(): Promise<void> {
       console.log(`   POST /v1/accounts (Create bank account) - Requires authentication`);
       console.log(`   GET  /v1/accounts (List all bank accounts) - Requires authentication`);
       console.log(`   GET  /v1/accounts/{accountNumber} (Get bank account by number) - Requires authentication & authorization (own account only)`);
+      console.log(`   PATCH /v1/accounts/{accountNumber} (Update bank account) - Requires authentication & authorization (own account only)`);
     });
 
     // Graceful shutdown handling

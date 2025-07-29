@@ -3,10 +3,11 @@ import {
   createBankAccountHandler,
   listAccountsHandler,
   getAccountHandler,
+  updateAccountHandler,
 } from '../controllers/account.controller';
 import { validateRequest } from '@/shared/middleware/validation.middleware';
 import { authenticateToken } from '@/shared/middleware/auth.middleware';
-import { CreateBankAccountSchema } from '../schema/account.schema';
+import { CreateBankAccountSchema, UpdateBankAccountSchema } from '../schema/account.schema';
 
 // Create router instance
 const router = Router();
@@ -26,6 +27,16 @@ router.get(
   authenticateToken,
   (req, res, next) => {
     void getAccountHandler(req, res, next);
+  }
+);
+
+// Update account by number route
+router.patch(
+  '/v1/accounts/:accountNumber',
+  authenticateToken,
+  validateRequest(UpdateBankAccountSchema),
+  (req, res, next) => {
+    void updateAccountHandler(req, res, next);
   }
 );
 
