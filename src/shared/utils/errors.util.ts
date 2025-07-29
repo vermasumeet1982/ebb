@@ -36,4 +36,11 @@ export class ForbiddenError extends Error {
     super(message);
     this.name = 'ForbiddenError';
   }
+}
+
+export class InsufficientFundsError extends Error {
+  constructor(message: string = 'Insufficient funds to process transaction') {
+    super(message);
+    this.name = 'InsufficientFundsError';
+  }
 } 

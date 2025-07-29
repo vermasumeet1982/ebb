@@ -7,11 +7,13 @@ import rateLimit from 'express-rate-limit';
 import { userRoutes } from './services/user/routes/user.routes';
 import { authRoutes } from './services/user/routes/auth.routes';
 import { accountRoutes } from './services/account/routes/account.routes';
+import { transactionRoutes } from './services/account/routes/transaction.routes';
 import { errorHandler, notFoundHandler } from './shared/middleware/error-handler.middleware';
 import { connectDatabase, prisma } from './shared/database/client';
 import { initUserController } from './services/user/controllers/user.controller';
 import { initAuthController } from './services/user/controllers/auth.controller';
 import { initAccountController } from './services/account/controllers/account.controller';
+import { initTransactionController } from './services/account/controllers/transaction.controller';
 import { configureDecimal } from './shared/config/decimal.config';
 
 // Load environment variables
@@ -60,11 +62,13 @@ export function createApp(): Express {
   initUserController(prisma);
   initAuthController(prisma);
   initAccountController(prisma);
+  initTransactionController(prisma);
 
   // API routes
   app.use('/', userRoutes);
   app.use('/', authRoutes);
   app.use('/', accountRoutes);
+  app.use('/', transactionRoutes);
 
   // Error handling middleware (must be last)
   app.use(notFoundHandler);
@@ -99,6 +103,7 @@ export async function startServer(): Promise<void> {
       console.log(`   GET  /v1/accounts (List all bank accounts) - Requires authentication`);
       console.log(`   GET  /v1/accounts/{accountNumber} (Get bank account by number) - Requires authentication & authorization (own account only)`);
       console.log(`   PATCH /v1/accounts/{accountNumber} (Update bank account) - Requires authentication & authorization (own account only)`);
+      console.log(`   POST /v1/accounts/{accountNumber}/transactions (Create transaction) - Requires authentication & authorization (own account only)`);
     });
 
     // Graceful shutdown handling

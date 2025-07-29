@@ -1,7 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { ConflictError, UnauthorizedError, ValidationError, NotFoundError, ForbiddenError } from '../utils/errors.util';
+import {
+  UnauthorizedError,
+  ValidationError,
+  NotFoundError,
+  ConflictError,
+  ForbiddenError,
+  InsufficientFundsError,
+} from '../utils/errors.util';
 
 /**
  * Global error handling middleware
@@ -10,11 +17,15 @@ export function errorHandler(
   error: Error,
   req: Request,
   res: Response,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _next: NextFunction
+  next: NextFunction
 ): void {
-  console.error('❌ Error occurred:', error);
-  console.error('📋 Request details:', { method: req.method, url: req.url });
+  console.error('Error occurred:', {
+    name: error.name,
+    message: error.message,
+    stack: error.stack,
+    path: req.path,
+    method: req.method,
+  });
 
   // Handle Zod validation errors
   if (error instanceof ZodError) {
@@ -31,19 +42,34 @@ export function errorHandler(
     return;
   }
 
-  // Handle custom validation errors
-  if (error instanceof ValidationError) {
-    res.status(400).json({
-      message: error.message,
-    });
+  // Handle custom application errors
+  if (error instanceof UnauthorizedError) {
+    res.status(401).json({ message: error.message });
     return;
   }
 
-  // Handle not found errors
+  if (error instanceof ValidationError) {
+    res.status(400).json({ message: error.message });
+    return;
+  }
+
   if (error instanceof NotFoundError) {
-    res.status(404).json({
-      message: error.message,
-    });
+    res.status(404).json({ message: error.message });
+    return;
+  }
+
+  if (error instanceof ConflictError) {
+    res.status(409).json({ message: error.message });
+    return;
+  }
+
+  if (error instanceof ForbiddenError) {
+    res.status(403).json({ message: error.message });
+    return;
+  }
+
+  if (error instanceof InsufficientFundsError) {
+    res.status(422).json({ message: error.message });
     return;
   }
 
@@ -63,30 +89,6 @@ export function errorHandler(
     }
   }
 
-  // Handle custom conflict errors
-  if (error instanceof ConflictError) {
-    res.status(409).json({
-      message: error.message,
-    });
-    return;
-  }
-
-   // Handle unauthorized errors
-   if (error instanceof UnauthorizedError) {
-    res.status(401).json({
-      message: error.message,
-    });
-    return;
-  }
-
-  // Handle forbidden errors (authorization failures)
-  if (error instanceof ForbiddenError) {
-    res.status(403).json({
-      message: error.message,
-    });
-    return;
-  }
-  
   // Handle JWT errors
   if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
     res.status(401).json({
