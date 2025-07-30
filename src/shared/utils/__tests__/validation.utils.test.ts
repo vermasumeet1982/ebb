@@ -1,9 +1,9 @@
 import {
-  isValidAccountNumber,
   isValidUserId,
   isValidTransactionId,
+  isValidAccountNumber,
   isValidPhoneNumber,
-} from '../validation.util';
+} from '../validation.utils';
 
 describe('Validation Utils', () => {
   describe('isValidUserId', () => {

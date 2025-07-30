@@ -5,4 +5,4 @@ export * from './id-generator.util';
 export * from './error.utils'; 
 
 // Validation utils
-export * from './validation.util';
+export * from './validation.utils';
