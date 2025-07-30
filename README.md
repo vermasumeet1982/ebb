@@ -78,6 +78,29 @@ yarn dev
 
 The API will be available at `http://localhost:3000`
 
+### Testing with Postman
+
+A Postman collection is provided in the `postman` directory for testing the API endpoints. The collection includes:
+
+- Environment variables for sensitive data (auth tokens, user IDs, account numbers)
+- All available API endpoints with example request bodies
+- Proper authentication headers set up
+
+To use the collection:
+
+1. Import `postman/Eagle Bank.postman_collection.json` into Postman
+2. Create a new environment and set up the following variables:
+   - `auth_token` - JWT token received from login
+   - `user_id` - User ID received after creating a user
+   - `account_number` - Account number received after creating a bank account
+   - `transaction_id` - Transaction ID received after creating a transaction
+
+Recommended testing flow:
+1. Create User → Get auth token from response
+2. Authenticate User → Set auth_token variable
+3. Create Bank Account → Set account_number variable
+4. Test other endpoints using the stored variables
+
 ### Available Scripts
 
 - `npm run dev` / `yarn dev` - Start development server with hot reload
@@ -99,14 +122,12 @@ The API will be available at `http://localhost:3000`
 - `POST /v1/users` - Create user
 - `GET /v1/users/{userId}` - Get user details (requires authentication)
 - `PATCH /v1/users/{userId}` - Update user (requires authentication)
-- `DELETE /v1/users/{userId}` - Delete user (requires authentication)
 
 ### Account Service
 - `POST /v1/accounts` - Create bank account (requires authentication)
 - `GET /v1/accounts` - List user's accounts (requires authentication)
 - `GET /v1/accounts/{accountId}` - Get account details (requires authentication)
 - `PATCH /v1/accounts/{accountId}` - Update account (requires authentication)
-- `DELETE /v1/accounts/{accountId}` - Delete account (requires authentication)
 - `POST /v1/accounts/{accountId}/transactions` - Create transaction (requires authentication)
 - `GET /v1/accounts/{accountId}/transactions` - List transactions (requires authentication)
 - `GET /v1/accounts/{accountId}/transactions/{transactionId}` - Get transaction (requires authentication)
