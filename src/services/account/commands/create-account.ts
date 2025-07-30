@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { Decimal } from 'decimal.js';
 import { CreateBankAccountRequest } from '../schema/account.schema';
 import { BankAccount, Currency, SORT_CODE } from '../entities/account';
-import { generateAccountNumber } from '@/shared/utils/id-generator.util';
+import { generateAccountNumber } from '@/shared/utils/id-generator.utils';
 
 /**
  * Generate a unique account number

@@ -1,5 +1,6 @@
 // Entity types
 export * from './user';
+export * from './user.dto';
 
 // Mapper functions  
 export * from '../mapper/user.mapper';

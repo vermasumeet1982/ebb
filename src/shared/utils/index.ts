@@ -1,5 +1,5 @@
 // Utility functions
-export * from './id-generator.util';
+export * from './id-generator.utils';
 
 // Error classes
 export * from './error.utils'; 
