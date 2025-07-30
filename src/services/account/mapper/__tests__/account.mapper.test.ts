@@ -2,7 +2,8 @@ import { Decimal } from 'decimal.js';
 import { mapAccountToResponse, mapTransactionToResponse } from '../account.mapper';
 import { AccountType, Currency } from '../../entities/account';
 import { Transaction, TransactionType } from '../../entities/transaction';
-import { BankAccountResponse, TransactionResponse } from '../../entities/account.dto';
+import { BankAccountResponse } from '../../entities/account.dto';
+import { TransactionResponse } from '../../entities/transaction.dto';
 
 describe('Account Mapper', () => {
   describe('mapAccountToResponse', () => {

@@ -1,5 +1,6 @@
 import { BankAccount } from '../entities/account';
-import { BankAccountResponse, TransactionResponse } from '../entities/account.dto';
+import { BankAccountResponse } from '../entities/account.dto';
+import { TransactionResponse } from '../entities/transaction.dto';
 import { Transaction } from '../entities/transaction';
 
 /**
