@@ -17,7 +17,7 @@ jest.mock('bcryptjs', () => ({
 }));
 
 // Mock ID generator
-jest.mock('@/shared/utils/id-generator.util', () => ({
+jest.mock('@/shared/utils/id-generator.utils', () => ({
   generateUserId: jest.fn().mockReturnValue('usr-abc123def456'),
 }));
 
@@ -276,7 +276,7 @@ describe('createUser', () => {
 
   describe('ID generation', () => {
     it('should generate a unique userId for each user', async () => {
-      const { generateUserId } = require('@/shared/utils/id-generator.util');
+      const { generateUserId } = require('@/shared/utils/id-generator.utils');
       
       (mockPrisma.user.findFirst as jest.Mock).mockResolvedValue(null);
       (mockPrisma.user.create as jest.Mock).mockResolvedValue(mockCreatedUser);

@@ -3,7 +3,7 @@ import { Decimal } from 'decimal.js';
 import { Transaction, TransactionType } from '../entities/transaction';
 import { CreateTransactionRequest } from '../schema/transaction.schema';
 import { NotFoundError, ForbiddenError, InsufficientFundsError } from '@/shared/utils/error.utils';
-import { generateTransactionId } from '@/shared/utils/id-generator.util';
+import { generateTransactionId } from '@/shared/utils/id-generator.utils';
 
 /**
  * Create a transaction with atomic balance update

@@ -1,4 +1,4 @@
-import { generateUserId, generateTransactionId, generateAccountNumber } from '../id-generator.util';
+import { generateUserId, generateTransactionId, generateAccountNumber } from '../id-generator.utils';
 import { isValidUserId, isValidAccountNumber } from '../validation.utils';
 
 describe('ID Generator Utils', () => {

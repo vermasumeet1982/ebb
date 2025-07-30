@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { PrismaClient } from '@prisma/client';
 import { CreateUserRequest } from '../schema/user.schema';
-import { generateUserId } from '@/shared/utils/id-generator.util';
+import { generateUserId } from '@/shared/utils/id-generator.utils';
 import { ConflictError } from '@/shared/utils/error.utils';
 
 /**
