@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { Decimal } from 'decimal.js';
 import { BankAccount } from '../entities/account';
-import { NotFoundError, ForbiddenError } from '@/shared/utils/errors.util';
+import { NotFoundError, ForbiddenError } from '@/shared/utils/error.utils';
 
 /**
  * Fetch a bank account by account number

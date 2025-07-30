@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { Decimal } from 'decimal.js';
 import { listTransactions } from '../list-transactions';
-import { NotFoundError, ForbiddenError } from '../../../../shared/utils/errors.util';
+import { NotFoundError, ForbiddenError } from '../../../../shared/utils/error.utils';
 import { TransactionType } from '../../entities/transaction';
 import { Currency } from '../../entities/account';
 

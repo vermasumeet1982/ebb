@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { Decimal } from 'decimal.js';
 import { createBankAccount } from '../create-bank-account';
 import { AccountType, Currency, SORT_CODE } from '../../entities/account';
-import { ConflictError } from '../../../../shared/utils/errors.util';
+import { ConflictError } from '../../../../shared/utils/error.utils';
 
 // Mock Prisma client
 const mockPrisma = {

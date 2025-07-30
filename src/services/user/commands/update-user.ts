@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { UpdateUserRequest } from '../schema/user.schema';
-import { NotFoundError, ConflictError } from '@/shared/utils/errors.util';
+import { NotFoundError, ConflictError } from '@/shared/utils/error.utils';
 
 /**
  * Update user by userId (customer-facing ID)

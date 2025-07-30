@@ -4,8 +4,8 @@ import { createTransaction } from '../commands/create-transaction';
 import { listTransactions } from '../querier/list-transactions';
 import { fetchTransaction } from '../querier/fetch-transaction';
 import { mapTransactionToResponse } from '../mapper/account.mapper';
-import { UnauthorizedError, NotFoundError, ValidationError } from '../../../shared/utils/errors.util';
-import { isValidAccountNumber, isValidTransactionId } from '../../../shared/utils/validation.util';
+import { UnauthorizedError, NotFoundError, ValidationError } from '@/shared/utils/error.utils';
+import { isValidAccountNumber, isValidTransactionId } from '@/shared/utils/validation.util';
 
 let prismaClient: PrismaClient;
 

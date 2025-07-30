@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 import { loginUser } from '../login-user';
 import { LoginRequest } from '../../schema/auth.schema';
-import { UnauthorizedError } from '../../../../shared/utils/errors.util';
+import { UnauthorizedError } from '../../../../shared/utils/error.utils';
 
 // Mock Prisma client
 const mockPrisma = {
@@ -23,7 +23,7 @@ jest.mock('jsonwebtoken', () => ({
 }));
 
 // Mock UnauthorizedError
-jest.mock('@/shared/utils/errors.util', () => ({
+jest.mock('@/shared/utils/error.utils', () => ({
   UnauthorizedError: jest.fn(),
 }));
 

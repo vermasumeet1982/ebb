@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { getUser } from '../get-user';
-import { NotFoundError, ValidationError } from '../../../../shared/utils/errors.util';
+import { NotFoundError, ValidationError } from '../../../../shared/utils/error.utils';
 
 // Mock Prisma client
 const mockPrisma = {

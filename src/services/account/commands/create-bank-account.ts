@@ -3,7 +3,7 @@ import { Decimal } from 'decimal.js';
 import { CreateBankAccountRequest } from '../schema/account.schema';
 import { BankAccount, Currency, SORT_CODE } from '../entities/account';
 import { generateAccountNumber } from '@/shared/utils/id-generator.util';
-import { ConflictError } from '@/shared/utils/errors.util';
+import { ConflictError } from '@/shared/utils/error.utils';
 
 const MAX_RETRIES = 20; 
 

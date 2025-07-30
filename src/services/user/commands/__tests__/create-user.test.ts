@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { createUser } from '../create-user';
 import { CreateUserRequest } from '../../schema/user.schema';
-import { ConflictError } from '../../../../shared/utils/errors.util';
+import { ConflictError } from '../../../../shared/utils/error.utils';
 
 // Mock Prisma client
 const mockPrisma = {

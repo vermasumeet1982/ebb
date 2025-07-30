@@ -5,7 +5,7 @@ import { listAccounts } from '../querier/list-accounts';
 import { getAccount } from '../querier/get-account';
 import { updateBankAccount } from '../commands/update-bank-account';
 import { mapAccountToResponse } from '../mapper/account.mapper';
-import { UnauthorizedError, NotFoundError, ValidationError } from '@/shared/utils/errors.util';
+import { UnauthorizedError, NotFoundError, ValidationError } from '@/shared/utils/error.utils';
 import { isValidAccountNumber } from '@/shared/utils/validation.util';
 
 let prismaClient: PrismaClient;

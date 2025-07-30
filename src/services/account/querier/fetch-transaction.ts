@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { Decimal } from 'decimal.js';
 import { Transaction } from '../entities/transaction';
-import { NotFoundError, ForbiddenError } from '../../../shared/utils/errors.util';
+import { NotFoundError, ForbiddenError } from '@/shared/utils/error.utils';
 
 /**
  * Fetches a single transaction by ID, ensuring the user has access to the account

@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { Decimal } from 'decimal.js';
 import { BankAccount } from '../entities/account';
 import { UpdateBankAccountRequest } from '../schema/account.schema';
-import { NotFoundError, ForbiddenError } from '@/shared/utils/errors.util';
+import { NotFoundError, ForbiddenError } from '@/shared/utils/error.utils';
 
 /**
  * Update a bank account

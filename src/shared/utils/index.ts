@@ -2,7 +2,7 @@
 export * from './id-generator.util';
 
 // Error classes
-export * from './errors.util'; 
+export * from './error.utils'; 
 
 // Validation utils
 export * from './validation.util';

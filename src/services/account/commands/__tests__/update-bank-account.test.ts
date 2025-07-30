@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { Decimal } from 'decimal.js';
 import { updateBankAccount } from '../update-bank-account';
 import { AccountType, Currency } from '../../entities/account';
-import { NotFoundError, ForbiddenError } from '../../../../shared/utils/errors.util';
+import { NotFoundError, ForbiddenError } from '../../../../shared/utils/error.utils';
 
 // Mock Prisma client
 const mockPrisma = {

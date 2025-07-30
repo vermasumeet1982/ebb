@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { authorizeUserAccess } from '../authorization.middleware';
-import { ForbiddenError } from '../../utils/errors.util';
+import { ForbiddenError } from '../../utils/error.utils';
 
 // Mock Express types
 const mockRequest = (user?: { userId: string; email: string }, params?: { userId?: string }) => {

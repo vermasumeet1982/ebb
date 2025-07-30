@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 import { LoginRequest } from '../schema/auth.schema';
-import { UnauthorizedError } from '@/shared/utils/errors.util';
+import { UnauthorizedError } from '@/shared/utils/error.utils';
 
 /**
  * Login a user and return JWT token

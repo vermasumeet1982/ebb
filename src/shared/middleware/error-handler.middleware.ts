@@ -8,7 +8,7 @@ import {
   ConflictError,
   ForbiddenError,
   InsufficientFundsError,
-} from '../utils/errors.util';
+} from '../utils/error.utils';
 
 /**
  * Global error handling middleware

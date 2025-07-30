@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { NotFoundError, ValidationError } from '@/shared/utils/errors.util';
+import { NotFoundError, ValidationError } from '@/shared/utils/error.utils';
 
 /**
  * Get user by userId (customer-facing ID)

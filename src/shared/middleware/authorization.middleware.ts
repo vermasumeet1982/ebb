@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ForbiddenError } from '../utils/errors.util';
+import { ForbiddenError } from '../utils/error.utils';
 
 /**
  * Authorization middleware to ensure users can only access their own data

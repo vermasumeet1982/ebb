@@ -2,8 +2,8 @@ import { PrismaClient, Prisma } from '@prisma/client';
 import { Decimal } from 'decimal.js';
 import { Transaction, TransactionType } from '../entities/transaction';
 import { CreateTransactionRequest } from '../schema/transaction.schema';
-import { NotFoundError, ForbiddenError, InsufficientFundsError } from '../../../shared/utils/errors.util';
-import { generateTransactionId } from '../../../shared/utils/id-generator.util';
+import { NotFoundError, ForbiddenError, InsufficientFundsError } from '@/shared/utils/error.utils';
+import { generateTransactionId } from '@/shared/utils/id-generator.util';
 
 /**
  * Create a transaction with atomic balance update

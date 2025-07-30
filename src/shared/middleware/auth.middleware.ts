@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { UnauthorizedError } from '../utils/errors.util';
+import { UnauthorizedError } from '../utils/error.utils';
 
 // Extend Express Request interface to include user info
 declare module 'express' {

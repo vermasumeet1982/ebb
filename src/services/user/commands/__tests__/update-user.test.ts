@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { updateUser } from '../update-user';
 import { UpdateUserRequest } from '../../schema/user.schema';
-import { NotFoundError, ConflictError } from '../../../../shared/utils/errors.util';
+import { NotFoundError, ConflictError } from '../../../../shared/utils/error.utils';
 
 // Mock Prisma client
 const mockPrisma = {
