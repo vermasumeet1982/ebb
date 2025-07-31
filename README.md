@@ -96,7 +96,7 @@ To use the collection:
    - `transaction_id` - Transaction ID received after creating a transaction
 
 Recommended testing flow:
-1. Create User → Get auth token from response
+1. Create User → Get user information from response
 2. Authenticate User → Set auth_token variable
 3. Create Bank Account → Set account_number variable
 4. Test other endpoints using the stored variables
